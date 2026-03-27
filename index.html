@@ -116,41 +116,54 @@
       tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">🔄 Syncing with database...</td></tr>';
       try {
         const res = await callGAS('getAllActiveOrders', {});
-        if (res.success && res.data.length > 0) {
+        
+        // Ensure successful connection and verify data is present
+        if (res.success && res.data && res.data.length > 0) {
           tbody.innerHTML = res.data.map(o => {
             
             let badgeClass = 'status-received';
             if (o.status === 'Processing' || o.status === 'In Progress' || o.status === 'Scheduled') badgeClass = 'status-processing';
             if (o.status === 'Shipped' || o.status === 'Dispatched') badgeClass = 'status-shipped';
 
-            // Clean up the text replacements
-            let cleanDetails = o.details.replace("🚨 [URGENT] ", "<span style='color:#d32e30;font-weight:700;'>[URGENT]</span> ");
-            
+            // CRITICAL FIX: Convert everything to a String before manipulating to prevent crash loops
+            let safeDetails = String(o.details || "");
+            let cleanDetails = safeDetails.replace("🚨 [URGENT] ", "<span style='color:#d32e30;font-weight:700;'>[URGENT]</span> ");
+            let safeBranch = String(o.branch || "").replace(/\|/g, " - ");
+            let safeItem = String(o.item || "");
+            let safeId = String(o.id || "");
+            let safeDate = String(o.date || "");
+            let safeStaff = String(o.staff || "");
+            let safeStatus = String(o.status || "");
+
             return `
               <tr>
-                <td style="font-family:monospace; font-size:12px; color:#888;">${o.id}</td>
-                <td style="font-size:12px; color:#666;">${o.date}</td>
-                <td style="font-weight:700; color:#111;">${o.branch.replace(/\|/g, " - ")}</td>
-                <td style="font-size:13px; color:#444;">${o.staff}</td>
+                <td style="font-family:monospace; font-size:12px; color:#888;">${safeId}</td>
+                <td style="font-size:12px; color:#666;">${safeDate}</td>
+                <td style="font-weight:700; color:#111;">${safeBranch}</td>
+                <td style="font-size:13px; color:#444;">${safeStaff}</td>
                 <td style="max-width: 320px;">
-                  <div style="font-weight:700; color:#111; font-size:14px; margin-bottom: 2px;">${o.item}</div>
+                  <div style="font-weight:700; color:#111; font-size:14px; margin-bottom: 2px;">${safeItem}</div>
                   <div style="font-size:12px; color:#666; white-space:pre-wrap; line-height: 1.4;">${cleanDetails}</div>
                 </td>
-                <td><span class="status-badge ${badgeClass}">${o.status}</span></td>
+                <td><span class="status-badge ${badgeClass}">${safeStatus}</span></td>
                 <td style="min-width: 200px;">
-                  <button class="action-btn" onclick="updateStatus('${o.id}', 'Processing')">Process</button>
-                  <button class="action-btn" onclick="updateStatus('${o.id}', 'Shipped')">Ship</button>
+                  <button class="action-btn" onclick="updateStatus('${safeId}', 'Processing')">Process</button>
+                  <button class="action-btn" onclick="updateStatus('${safeId}', 'Shipped')">Ship</button>
                   <a href="${o.link}" target="_blank" class="action-btn">Timeline</a>
-                  <button class="action-btn btn-cancel" onclick="updateStatus('${o.id}', 'Canceled')">Cancel</button>
+                  <button class="action-btn btn-cancel" onclick="updateStatus('${safeId}', 'Canceled')">Cancel</button>
                 </td>
               </tr>
             `;
           }).join('');
-        } else {
+        } else if (res.success) {
           tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">No active orders right now. You are all caught up!</td></tr>';
+        } else {
+          // If the backend actively rejected the request
+          tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-danger fw-bold">Backend Error: ${res.message || "Action not found."}</td></tr>`;
         }
       } catch(e) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-danger fw-bold">Failed to load orders. Please check connection.</td></tr>';
+        // If the Javascript fails, print the exact crash log to the screen
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-danger fw-bold">Display Error: ${e.message}</td></tr>`;
       }
     }
 
