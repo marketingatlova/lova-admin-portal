@@ -6,25 +6,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background: #f1f5f9; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 20px; }
-    .navbar { background: #1e293b; color: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .navbar-brand { font-weight: 800; font-size: 20px; letter-spacing: 0.5px; }
-    .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-    .table th { background: #f8fafc; color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
-    .table td { vertical-align: middle; font-size: 14px; color: #1e293b; border-bottom: 1px solid #f1f5f9; }
+    body { background: #fafafa; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 20px; }
     
-    .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .status-received { background: #fff7ed; color: #c2410c; }
-    .status-processing { background: #eff6ff; color: #1d4ed8; }
-    .status-shipped { background: #ecfdf5; color: #059669; }
+    /* Minimalist Navbar */
+    .navbar { background: #111111; color: white; padding: 16px 24px; border-radius: 10px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .navbar-brand { font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
     
-    .action-btn { font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 6px; margin-right: 4px; margin-bottom: 4px; transition: 0.2s; border: none; }
-    .btn-process { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; } .btn-process:hover { background: #dbeafe; }
-    .btn-ship { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; } .btn-ship:hover { background: #d1fae5; }
-    .btn-cancel { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; } .btn-cancel:hover { background: #fee2e2; }
-    .btn-timeline { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; text-decoration: none; } .btn-timeline:hover { background: #e2e8f0; color: #475569; }
+    /* Clean Card & Table */
+    .card { border: 1px solid #eaeaea; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .table th { background: #ffffff; color: #888888; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid #eeeeee; padding: 16px; }
+    .table td { vertical-align: middle; font-size: 13px; color: #333333; border-bottom: 1px solid #f5f5f5; padding: 16px; }
     
+    /* Monochrome Status Badges */
+    .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-received { background: #f0f0f0; color: #555555; }
+    .status-processing { background: #111111; color: #ffffff; }
+    .status-shipped { background: #ffffff; color: #111111; border: 1px solid #111111; }
+    
+    /* Sleek Outline Buttons */
+    .action-btn { font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; margin-right: 4px; margin-bottom: 4px; transition: all 0.2s ease; border: 1px solid #dddddd; background: #ffffff; color: #333333; cursor: pointer; text-decoration: none; display: inline-block; }
+    .action-btn:hover { background: #f5f5f5; border-color: #bbbbbb; color: #111111; }
+    .btn-cancel { color: #d32e30; border-color: #fca5a5; } 
+    .btn-cancel:hover { background: #fef2f2; border-color: #ef4444; color: #d32e30; }
+    
+    /* Login Screen */
     .login-container { max-width: 400px; margin: 100px auto; }
+    .pin-input { font-size: 20px; letter-spacing: 8px; height: 55px; border-radius: 10px; border: 1px solid #ddd; transition: 0.2s; }
+    .pin-input:focus { border-color: #111; box-shadow: none; outline: none; }
+    .btn-black { background: #111; color: #fff; font-weight: 700; height: 50px; border-radius: 10px; border: none; transition: 0.2s; }
+    .btn-black:hover { background: #333; color: #fff; }
+
     #adminDashboard { display: none; }
   </style>
 </head>
@@ -32,26 +43,26 @@
 
   <div id="loginScreen" class="container login-container">
     <div class="card p-4 text-center">
-      <h3 style="color:#d32e30; font-weight:800; margin-bottom: 4px;">Lova Admin</h3>
-      <p style="color:#64748b; font-size:13px; margin-bottom:24px;">Marketing Command Center</p>
-      <input type="password" id="adminPin" class="form-control text-center mb-3" placeholder="Enter PIN" style="font-size:20px; letter-spacing:8px; height: 55px; border-radius: 12px;">
-      <button class="btn btn-danger w-100" style="background:#d32e30; font-weight:700; height: 50px; border-radius: 12px;" onclick="adminLogin()">Access Terminal</button>
-      <div id="loginStatus" class="mt-3 text-danger fw-bold" style="font-size:14px;"></div>
+      <h3 style="color:#111; font-weight:800; margin-bottom: 4px; letter-spacing: -0.5px;">Lova Admin</h3>
+      <p style="color:#888; font-size:13px; margin-bottom:24px;">Marketing Command Center</p>
+      <input type="password" id="adminPin" class="form-control text-center mb-3 pin-input" placeholder="••••••" onkeydown="if(event.key==='Enter') adminLogin()">
+      <button class="w-100 btn-black" onclick="adminLogin()">Access Terminal</button>
+      <div id="loginStatus" class="mt-3 fw-bold" style="font-size:13px; color:#d32e30;"></div>
     </div>
   </div>
 
   <div id="adminDashboard" class="container-fluid" style="max-width: 1200px;">
     <div class="navbar">
-      <div class="navbar-brand">📦 Marketing HQ: Active Orders</div>
+      <div class="navbar-brand">Active Orders</div>
       <div>
-        <span id="adminName" style="margin-right: 15px; font-size: 14px; color: #94a3b8;"></span>
-        <button class="btn btn-sm btn-light fw-bold" style="border-radius: 8px;" onclick="refreshData()">🔄 Refresh</button>
+        <span id="adminName" style="margin-right: 16px; font-size: 13px; color: #aaaaaa; font-weight: 500;"></span>
+        <button class="btn btn-sm btn-light fw-bold" style="border-radius: 6px; font-size: 12px; padding: 6px 12px;" onclick="refreshData()">🔄 Refresh</button>
       </div>
     </div>
 
     <div class="card p-0 overflow-hidden">
       <div class="table-responsive">
-        <table class="table mb-0 table-hover">
+        <table class="table mb-0 table-hover align-middle">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -60,7 +71,7 @@
               <th>Requested By</th>
               <th>Item & Details</th>
               <th>Status</th>
-              <th>Quick Actions</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="orderTableBody">
@@ -72,7 +83,6 @@
   </div>
 
   <script>
-    // This is already linked to your exact live Google Apps Script!
     const GAS_URL = "https://script.google.com/macros/s/AKfycbzKbbSF3uVnDqjBNolLRxKVmTYX4mkyAIqwMhJplYJS4KrGq0Z52Y3TqY-ZJ0eE5iZX/exec";
 
     async function callGAS(action, params) {
@@ -103,38 +113,41 @@
 
     async function refreshData() {
       const tbody = document.getElementById('orderTableBody');
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">🔄 Syncing with Google Sheets...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">🔄 Syncing with database...</td></tr>';
       try {
         const res = await callGAS('getAllActiveOrders', {});
         if (res.success && res.data.length > 0) {
           tbody.innerHTML = res.data.map(o => {
-            // Determine badge color based on status
+            
             let badgeClass = 'status-received';
             if (o.status === 'Processing' || o.status === 'In Progress' || o.status === 'Scheduled') badgeClass = 'status-processing';
             if (o.status === 'Shipped' || o.status === 'Dispatched') badgeClass = 'status-shipped';
 
+            // Clean up the text replacements
+            let cleanDetails = o.details.replace("🚨 [URGENT] ", "<span style='color:#d32e30;font-weight:700;'>[URGENT]</span> ");
+            
             return `
               <tr>
-                <td style="font-family:monospace; font-size:12px; color:#64748b; font-weight:700;">${o.id}</td>
-                <td style="font-size:12px; color:#475569;">${o.date}</td>
-                <td style="font-weight:800; color:#1e293b;">${o.branch.replace(/\|/g, " - ")}</td>
-                <td style="font-size:13px;">${o.staff}</td>
-                <td style="max-width: 300px;">
-                  <div style="font-weight:800; color:#d32e30; font-size:14px;">${o.item}</div>
-                  <div style="font-size:12px; color:#64748b; white-space:pre-wrap; margin-top:2px;">${o.details}</div>
+                <td style="font-family:monospace; font-size:12px; color:#888;">${o.id}</td>
+                <td style="font-size:12px; color:#666;">${o.date}</td>
+                <td style="font-weight:700; color:#111;">${o.branch.replace(/\|/g, " - ")}</td>
+                <td style="font-size:13px; color:#444;">${o.staff}</td>
+                <td style="max-width: 320px;">
+                  <div style="font-weight:700; color:#111; font-size:14px; margin-bottom: 2px;">${o.item}</div>
+                  <div style="font-size:12px; color:#666; white-space:pre-wrap; line-height: 1.4;">${cleanDetails}</div>
                 </td>
                 <td><span class="status-badge ${badgeClass}">${o.status}</span></td>
-                <td>
-                  <button class="action-btn btn-process" onclick="updateStatus('${o.id}', 'Processing')">Process</button>
-                  <button class="action-btn btn-ship" onclick="updateStatus('${o.id}', 'Shipped')">Ship</button>
+                <td style="min-width: 200px;">
+                  <button class="action-btn" onclick="updateStatus('${o.id}', 'Processing')">Process</button>
+                  <button class="action-btn" onclick="updateStatus('${o.id}', 'Shipped')">Ship</button>
+                  <a href="${o.link}" target="_blank" class="action-btn">Timeline</a>
                   <button class="action-btn btn-cancel" onclick="updateStatus('${o.id}', 'Canceled')">Cancel</button>
-                  <a href="${o.link}" target="_blank" class="action-btn btn-timeline d-inline-block">Timeline</a>
                 </td>
               </tr>
             `;
           }).join('');
         } else {
-          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">No active orders right now. You are all caught up! 🎉</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-muted fw-bold">No active orders right now. You are all caught up!</td></tr>';
         }
       } catch(e) {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5 text-danger fw-bold">Failed to load orders. Please check connection.</td></tr>';
@@ -147,7 +160,7 @@
       try {
         const res = await callGAS('adminUpdateOrder', { orderId: orderId, newStatus: newStatus });
         if (res.success) {
-          refreshData(); // Reload the table instantly
+          refreshData(); 
         } else {
           alert("Failed to update status: " + res.message);
         }
